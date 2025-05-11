@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="admin-styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
@@ -34,33 +33,62 @@
             </div>
             
             <div class="view-toggle">
-                <button id="table-view-btn" class="active"><i class="fas fa-table"></i> Таблица</button>
-                <button id="cards-view-btn"><i class="fas fa-th"></i> Карточки</button>
+                <button id="products-tab-btn" class="active"><i class="fas fa-box"></i> Товары</button>
+                <button id="reviews-tab-btn"><i class="fas fa-comments"></i> Отзывы</button>
             </div>
             
-            <div id="table-view">
-                <div class="products-table-container">
-                    <div class="table-responsive">
-                        <table id="products-table">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Изображение</th>
-                                    <th>Название</th>
-                                    <th>Цена</th>
-                                    <th>Категория</th>
-                                    <th>Наличие</th>
-                                    <th>Действия</th>
-                                </tr>
-                            </thead>
-                            <tbody id="products-list"></tbody>
-                        </table>
+            <div id="content-tabs">
+                <div id="products-tab" class="tab-content active">
+                    <div class="view-toggle">
+                        <button id="table-view-btn" class="active"><i class="fas fa-table"></i> Таблица</button>
+                        <button id="cards-view-btn"><i class="fas fa-th"></i> Карточки</button>
+                    </div>
+                    
+                    <div id="table-view">
+                        <div class="products-table-container">
+                            <div class="table-responsive">
+                                <table id="products-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Изображение</th>
+                                            <th>Название</th>
+                                            <th>Цена</th>
+                                            <th>Категория</th>
+                                            <th>Наличие</th>
+                                            <th>Действия</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="products-list"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="cards-view">
+                        <div id="products-cards" class="product-cards"></div>
                     </div>
                 </div>
-            </div>
-            
-            <div id="cards-view">
-                <div id="products-cards" class="product-cards"></div>
+                
+                <div id="reviews-tab" class="tab-content">
+                    <div class="reviews-table-container">
+                        <div class="table-responsive">
+                            <table id="reviews-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Пользователь</th>
+                                        <th>Дата</th>
+                                        <th>Оценка</th>
+                                        <th>Текст отзыва</th>
+                                        <th>Действия</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="reviews-list"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         
