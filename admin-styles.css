@@ -134,7 +134,7 @@ button:active {
     flex-wrap: wrap;
 }
 
-.products-table-container {
+.products-table-container, .reviews-table-container {
     background-color: var(--card-bg);
     border-radius: 16px;
     box-shadow: var(--card-shadow);
@@ -164,6 +164,14 @@ button:active {
 
 #cards-view {
     display: none;
+}
+
+#content-tabs .tab-content {
+    display: none;
+}
+
+#content-tabs .tab-content.active {
+    display: block;
 }
 
 .product-cards {
@@ -271,7 +279,6 @@ button:active {
     margin-bottom: 15px;
 }
 
-/* Состояние синхронизации */
 .sync-status {
     position: fixed;
     bottom: 20px;
@@ -311,7 +318,6 @@ button:active {
     100% { transform: rotate(360deg); }
 }
 
-/* Таблица товаров */
 .table-responsive {
     overflow-x: auto;
     width: 100%;
@@ -347,7 +353,6 @@ tbody tr:hover {
     background-color: rgba(122, 150, 144, 0.1);
 }
 
-/* Ячейки для изменения количества */
 .stock-cell {
     display: flex;
     align-items: center;
@@ -387,7 +392,6 @@ tbody tr:hover {
     transform: scale(0.95);
 }
 
-/* Статус синхронизации в ячейке */
 .stock-cell.syncing .stock-value {
     position: relative;
 }
@@ -423,7 +427,7 @@ tbody tr:hover {
     flex-wrap: nowrap;
 }
 
-.edit-button, .delete-button {
+.edit-button, .delete-button, .delete-review-button {
     padding: 6px 10px;
     font-size: 12px;
     border-radius: 6px;
@@ -434,12 +438,11 @@ tbody tr:hover {
     color: white;
 }
 
-.delete-button {
+.delete-button, .delete-review-button {
     background-color: #f44336;
     color: white;
 }
 
-/* Modal Styles */
 .modal {
     display: none;
     position: fixed;
@@ -544,7 +547,6 @@ tbody tr:hover {
     margin-top: 20px;
 }
 
-/* Анимации */
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -561,7 +563,6 @@ tbody tr:hover {
     }
 }
 
-/* Медиа-запросы для адаптивности */
 @media (max-width: 768px) {
     h1 {
         font-size: 1.2rem;
@@ -618,7 +619,6 @@ tbody tr:hover {
     }
 }
 
-/* Дополнительные стили для кнопок */
 .icon-btn {
     width: 40px;
     height: 40px;
@@ -660,4 +660,51 @@ tbody tr:hover {
 .notification.visible {
     opacity: 1;
     transform: translateY(0);
+}
+
+.review-rating {
+    color: #FFB800;
+    font-size: 18px;
+}
+
+.review-text-cell {
+    max-width: 300px;
+    white-space: normal;
+    word-break: break-word;
+}
+
+.confirm-dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1100;
+}
+
+.confirm-dialog-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 400px;
+    text-align: center;
+}
+
+.confirm-dialog-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.confirm-dialog-buttons button {
+    padding: 8px 16px;
+}
+
+#reviews-table th:nth-child(5) {
+    width: 40%;
 }
