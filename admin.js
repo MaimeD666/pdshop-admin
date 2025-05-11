@@ -67,12 +67,10 @@ async function saveProduct(product) {
         
         await db.collection('products').doc(productId).set(product);
         
-        console.log('Товар успешно сохранен:', product);
         syncingProducts.delete(product.id);
         updateSyncingStatus();
         return true;
     } catch (error) {
-        console.error('Ошибка сохранения товара:', error);
         showNotification('Ошибка сохранения товара в базу данных', 'error');
         syncingProducts.delete(product.id);
         updateSyncingStatus();
@@ -107,8 +105,6 @@ async function updateProductStock(productId, newStock) {
             stock: newStock
         });
         
-        console.log(`Количество товара ID ${productId} обновлено на ${newStock}`);
-        
         if (stockCell) {
             stockCell.querySelector('.stock-value').textContent = newStock;
             stockCell.classList.remove('syncing');
@@ -118,7 +114,6 @@ async function updateProductStock(productId, newStock) {
         updateSyncingStatus();
         return true;
     } catch (error) {
-        console.error('Ошибка обновления количества товара:', error);
         showNotification('Ошибка обновления количества', 'error');
         
         if (stockCell) {
@@ -138,12 +133,10 @@ async function deleteProductFromDB(productId) {
         
         await db.collection('products').doc(productId.toString()).delete();
         
-        console.log('Товар успешно удален:', productId);
         syncingProducts.delete(productId);
         updateSyncingStatus();
         return true;
     } catch (error) {
-        console.error('Ошибка удаления товара:', error);
         showNotification('Ошибка удаления товара из базы данных', 'error');
         syncingProducts.delete(productId);
         updateSyncingStatus();
@@ -153,7 +146,10 @@ async function deleteProductFromDB(productId) {
 
 function renderProductsTable() {
     const tbody = document.getElementById('products-list');
+    const productCards = document.getElementById('products-cards');
+    
     tbody.innerHTML = '';
+    productCards.innerHTML = '';
     
     if (products.length === 0) {
         const tr = document.createElement('tr');
@@ -164,6 +160,14 @@ function renderProductsTable() {
             </td>
         `;
         tbody.appendChild(tr);
+        
+        const emptyCard = document.createElement('div');
+        emptyCard.className = 'empty-product-card';
+        emptyCard.innerHTML = `
+            <i class="fas fa-box-open"></i>
+            <p>Товары не найдены</p>
+        `;
+        productCards.appendChild(emptyCard);
         return;
     }
     
@@ -194,6 +198,35 @@ function renderProductsTable() {
         `;
         
         tbody.appendChild(tr);
+        
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+            <div class="card-header">
+                <img src="${product.image}" alt="${product.title}" onerror="this.src='images/placeholder.png'">
+                <div class="card-title">
+                    <h3>${product.title}</h3>
+                    <span class="card-id">ID: ${product.id}</span>
+                </div>
+            </div>
+            <div class="card-details">
+                <div class="card-info">
+                    <div class="card-price">${product.price} ₽</div>
+                    <div class="card-category">${getCategoryName(product.category)}</div>
+                </div>
+                <div class="card-stock" data-id="${product.id}">
+                    <button class="stock-btn stock-decrease" data-id="${product.id}">-</button>
+                    <span class="stock-value">${product.stock}</span>
+                    <button class="stock-btn stock-increase" data-id="${product.id}">+</button>
+                </div>
+            </div>
+            <div class="card-actions">
+                <button class="edit-button" data-id="${product.id}"><i class="fas fa-edit"></i> Изменить</button>
+                <button class="delete-button" data-id="${product.id}"><i class="fas fa-trash"></i> Удалить</button>
+            </div>
+        `;
+        
+        productCards.appendChild(card);
     });
     
     document.querySelectorAll('.stock-decrease').forEach(button => {
@@ -290,20 +323,49 @@ async function deleteProduct(productId) {
     }
 }
 
+function toggleView(view) {
+    const tableView = document.getElementById('table-view');
+    const cardsView = document.getElementById('cards-view');
+    const tableBtn = document.getElementById('table-view-btn');
+    const cardsBtn = document.getElementById('cards-view-btn');
+    
+    if (view === 'table') {
+        tableView.style.display = 'block';
+        cardsView.style.display = 'none';
+        tableBtn.classList.add('active');
+        cardsBtn.classList.remove('active');
+        localStorage.setItem('viewMode', 'table');
+    } else {
+        tableView.style.display = 'none';
+        cardsView.style.display = 'block';
+        cardsBtn.classList.add('active');
+        tableBtn.classList.remove('active');
+        localStorage.setItem('viewMode', 'cards');
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const loginForm = document.getElementById('login-form');
     const adminPanel = document.getElementById('admin-panel');
     const productFormModal = document.getElementById('product-form-modal');
+    const logoutButton = document.getElementById('logout-button');
+    
+    logoutButton.style.display = 'none';
     
     firebase.auth().onAuthStateChanged((user) => {
         if (user) {
             loginForm.style.display = 'none';
             adminPanel.style.display = 'block';
+            logoutButton.style.display = 'block';
             loadProducts();
             showNotification('Вы вошли в систему', 'success');
+            
+            const savedViewMode = localStorage.getItem('viewMode') || 'table';
+            toggleView(savedViewMode);
         } else {
             loginForm.style.display = 'block';
             adminPanel.style.display = 'none';
+            logoutButton.style.display = 'none';
         }
     });
     
@@ -312,9 +374,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const password = document.getElementById('password-input').value;
         
         firebase.auth().signInWithEmailAndPassword(email, password)
-            .then((userCredential) => {
-                showNotification('Добро пожаловать в админ-панель!', 'success');
-            })
             .catch((error) => {
                 showNotification('Ошибка входа: ' + error.message, 'error');
             });
@@ -326,10 +385,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    document.getElementById('logout-button').addEventListener('click', function() {
-        firebase.auth().signOut().then(() => {
-            showNotification('Вы вышли из системы', 'success');
-        }).catch((error) => {
+    logoutButton.addEventListener('click', function() {
+        firebase.auth().signOut().catch((error) => {
             showNotification('Ошибка при выходе: ' + error.message, 'error');
         });
     });
@@ -379,7 +436,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     showSyncStatus('', false);
                 } catch (error) {
-                    console.error('Ошибка импорта:', error);
                     showNotification('Ошибка при импорте: некорректный файл JSON', 'error');
                     showSyncStatus('', false);
                 }
@@ -467,5 +523,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         showSyncStatus('', false);
+    });
+    
+    document.getElementById('table-view-btn').addEventListener('click', function() {
+        toggleView('table');
+    });
+    
+    document.getElementById('cards-view-btn').addEventListener('click', function() {
+        toggleView('cards');
     });
 });

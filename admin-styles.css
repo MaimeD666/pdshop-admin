@@ -57,7 +57,7 @@ button {
 }
 
 button:active {
-    transform: scale(0.98);
+    transform: scale(0.95);
 }
 
 .primary-button {
@@ -142,6 +142,135 @@ button:active {
     margin-bottom: 20px;
 }
 
+.view-toggle {
+    display: flex;
+    margin-bottom: 15px;
+    gap: 10px;
+}
+
+.view-toggle button {
+    background-color: #e0e0e0;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.view-toggle button.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+#cards-view {
+    display: none;
+}
+
+.product-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 15px;
+}
+
+.product-card {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+.card-header {
+    display: flex;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    gap: 15px;
+    align-items: center;
+}
+
+.card-header img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.card-title {
+    flex: 1;
+}
+
+.card-title h3 {
+    margin: 0 0 5px 0;
+    font-size: 16px;
+}
+
+.card-id {
+    font-size: 12px;
+    color: #777;
+}
+
+.card-details {
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+}
+
+.card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.card-price {
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.card-category {
+    font-size: 14px;
+    color: #777;
+}
+
+.card-stock {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.card-actions {
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.card-actions button {
+    flex: 1;
+    padding: 8px;
+}
+
+.empty-product-card {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 50px 20px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.empty-product-card i {
+    font-size: 48px;
+    color: #ddd;
+    margin-bottom: 15px;
+}
+
 /* Состояние синхронизации */
 .sync-status {
     position: fixed;
@@ -191,7 +320,6 @@ button:active {
 table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 700px;
 }
 
 thead {
@@ -436,7 +564,7 @@ tbody tr:hover {
 /* Медиа-запросы для адаптивности */
 @media (max-width: 768px) {
     h1 {
-        font-size: 1.5rem;
+        font-size: 1.2rem;
     }
     
     .admin-actions {
@@ -466,6 +594,27 @@ tbody tr:hover {
     .stock-cell {
         flex-direction: column;
         align-items: flex-start;
+    }
+    
+    .card-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .card-header img {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .card-details {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .card-stock {
+        width: 100%;
+        justify-content: center;
     }
 }
 
@@ -502,6 +651,10 @@ tbody tr:hover {
 
 .notification.error {
     background-color: var(--error-color);
+}
+
+.notification.warning {
+    background-color: var(--warning-color);
 }
 
 .notification.visible {

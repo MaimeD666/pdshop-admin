@@ -33,23 +33,34 @@
                 <button id="import-products-button" class="secondary-button"><i class="fas fa-file-import"></i> Импорт</button>
             </div>
             
-            <div id="products-table-container" class="products-table-container">
-                <div class="table-responsive">
-                    <table id="products-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Изображение</th>
-                                <th>Название</th>
-                                <th>Цена</th>
-                                <th>Категория</th>
-                                <th>Наличие</th>
-                                <th>Действия</th>
-                            </tr>
-                        </thead>
-                        <tbody id="products-list"></tbody>
-                    </table>
+            <div class="view-toggle">
+                <button id="table-view-btn" class="active"><i class="fas fa-table"></i> Таблица</button>
+                <button id="cards-view-btn"><i class="fas fa-th"></i> Карточки</button>
+            </div>
+            
+            <div id="table-view">
+                <div class="products-table-container">
+                    <div class="table-responsive">
+                        <table id="products-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Изображение</th>
+                                    <th>Название</th>
+                                    <th>Цена</th>
+                                    <th>Категория</th>
+                                    <th>Наличие</th>
+                                    <th>Действия</th>
+                                </tr>
+                            </thead>
+                            <tbody id="products-list"></tbody>
+                        </table>
+                    </div>
                 </div>
+            </div>
+            
+            <div id="cards-view">
+                <div id="products-cards" class="product-cards"></div>
             </div>
         </div>
         
