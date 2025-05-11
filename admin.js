@@ -1,6 +1,7 @@
 let products = [];
 let nextProductId = 1;
 let syncingProducts = new Set();
+let reviews = [];
 
 function showNotification(message, type = '') {
     const notification = document.getElementById('notification');
@@ -55,6 +56,130 @@ async function loadProducts() {
         console.error('Ошибка загрузки товаров:', error);
         showNotification('Ошибка загрузки товаров из базы данных', 'error');
         products = [];
+        showSyncStatus('', false);
+    }
+}
+
+async function loadReviews() {
+    showSyncStatus('Загрузка отзывов...', true);
+    
+    try {
+        const snapshot = await db.collection('reviews').orderBy('date', 'desc').get();
+        reviews = [];
+        
+        snapshot.forEach(doc => {
+            reviews.push({
+                id: doc.id,
+                ...doc.data()
+            });
+        });
+        
+        renderReviewsTable();
+        showSyncStatus('', false);
+    } catch (error) {
+        console.error('Ошибка загрузки отзывов:', error);
+        showNotification('Ошибка загрузки отзывов из базы данных', 'error');
+        reviews = [];
+        showSyncStatus('', false);
+    }
+}
+
+function renderReviewsTable() {
+    const tbody = document.getElementById('reviews-list');
+    
+    tbody.innerHTML = '';
+    
+    if (reviews.length === 0) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td colspan="6" style="text-align: center; padding: 30px;">
+                <i class="fas fa-comments" style="font-size: 48px; color: #ddd; margin-bottom: 10px;"></i>
+                <p>Отзывы не найдены</p>
+            </td>
+        `;
+        tbody.appendChild(tr);
+        return;
+    }
+    
+    reviews.forEach(review => {
+        const tr = document.createElement('tr');
+        
+        let dateStr = 'Нет даты';
+        if (review.date) {
+            const date = review.date.toDate ? review.date.toDate() : new Date(review.date);
+            dateStr = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
+        }
+        
+        let stars = '';
+        for (let i = 1; i <= 5; i++) {
+            stars += i <= review.rating ? '★' : '☆';
+        }
+        
+        tr.innerHTML = `
+            <td>${review.id}</td>
+            <td>${review.userName || 'Неизвестный пользователь'}</td>
+            <td>${dateStr}</td>
+            <td><div class="review-rating">${stars}</div></td>
+            <td class="review-text-cell">${review.text || ''}</td>
+            <td>
+                <button class="delete-review-button" data-id="${review.id}">
+                    <i class="fas fa-trash"></i> Удалить
+                </button>
+            </td>
+        `;
+        
+        tbody.appendChild(tr);
+    });
+    
+    document.querySelectorAll('.delete-review-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const reviewId = this.getAttribute('data-id');
+            showDeleteConfirmation(reviewId);
+        });
+    });
+}
+
+function showDeleteConfirmation(reviewId) {
+    const dialog = document.createElement('div');
+    dialog.className = 'confirm-dialog';
+    
+    dialog.innerHTML = `
+        <div class="confirm-dialog-content">
+            <h3>Подтверждение удаления</h3>
+            <p>Вы уверены, что хотите удалить этот отзыв? Это действие нельзя отменить.</p>
+            <div class="confirm-dialog-buttons">
+                <button class="secondary-button cancel-button">Отмена</button>
+                <button class="primary-button confirm-button" style="background-color: #f44336;">Удалить</button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(dialog);
+    
+    dialog.querySelector('.cancel-button').addEventListener('click', function() {
+        document.body.removeChild(dialog);
+    });
+    
+    dialog.querySelector('.confirm-button').addEventListener('click', function() {
+        deleteReview(reviewId);
+        document.body.removeChild(dialog);
+    });
+}
+
+async function deleteReview(reviewId) {
+    try {
+        showSyncStatus('Удаление отзыва...', true);
+        
+        await db.collection('reviews').doc(reviewId).delete();
+        
+        reviews = reviews.filter(review => review.id !== reviewId);
+        renderReviewsTable();
+        
+        showNotification('Отзыв успешно удален', 'success');
+        showSyncStatus('', false);
+    } catch (error) {
+        console.error('Ошибка удаления отзыва:', error);
+        showNotification('Ошибка удаления отзыва: ' + error.message, 'error');
         showSyncStatus('', false);
     }
 }
@@ -367,6 +492,21 @@ document.addEventListener('DOMContentLoaded', function() {
             adminPanel.style.display = 'none';
             logoutButton.style.display = 'none';
         }
+    });
+    
+    document.getElementById('products-tab-btn').addEventListener('click', function() {
+        document.getElementById('products-tab-btn').classList.add('active');
+        document.getElementById('reviews-tab-btn').classList.remove('active');
+        document.getElementById('products-tab').classList.add('active');
+        document.getElementById('reviews-tab').classList.remove('active');
+    });
+    
+    document.getElementById('reviews-tab-btn').addEventListener('click', function() {
+        document.getElementById('reviews-tab-btn').classList.add('active');
+        document.getElementById('products-tab-btn').classList.remove('active');
+        document.getElementById('reviews-tab').classList.add('active');
+        document.getElementById('products-tab').classList.remove('active');
+        loadReviews();
     });
     
     document.getElementById('login-button').addEventListener('click', function() {
