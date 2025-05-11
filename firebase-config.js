@@ -10,4 +10,17 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 const db = firebase.firestore();
-const auth = firebase.auth();
+
+db.settings({
+  ignoreUndefinedProperties: true,
+  merge: true
+});
+
+db.enablePersistence({synchronizeTabs: true})
+  .catch(err => {
+    if (err.code == 'failed-precondition') {
+      console.log('Персистентность может быть включена только в одной вкладке');
+    } else if (err.code == 'unimplemented') {
+      console.log('Браузер не поддерживает персистентность');
+    }
+  });
