@@ -64,21 +64,32 @@ async function loadReviews() {
     showSyncStatus('Загрузка отзывов...', true);
     
     try {
-        const snapshot = await db.collection('reviews').orderBy('date', 'desc').get();
+        console.log('Начинаем загрузку отзывов');
+        
+        if (!db) {
+            throw new Error('Firebase не инициализирован');
+        }
+        
+        const snapshot = await db.collection('reviews').get();
+        console.log('Получены данные из Firestore:', snapshot.size, 'отзывов');
+        
         reviews = [];
         
         snapshot.forEach(doc => {
+            const data = doc.data();
+            console.log('Отзыв:', doc.id, data);
             reviews.push({
                 id: doc.id,
-                ...doc.data()
+                ...data
             });
         });
         
+        console.log('Загружено отзывов:', reviews.length);
         renderReviewsTable();
         showSyncStatus('', false);
     } catch (error) {
         console.error('Ошибка загрузки отзывов:', error);
-        showNotification('Ошибка загрузки отзывов из базы данных', 'error');
+        showNotification('Ошибка загрузки отзывов из базы данных: ' + error.message, 'error');
         reviews = [];
         showSyncStatus('', false);
     }
@@ -87,6 +98,12 @@ async function loadReviews() {
 function renderReviewsTable() {
     const tbody = document.getElementById('reviews-list');
     
+    if (!tbody) {
+        console.error('Элемент reviews-list не найден');
+        return;
+    }
+    
+    console.log('Рендеринг таблицы отзывов:', reviews.length, 'отзывов');
     tbody.innerHTML = '';
     
     if (reviews.length === 0) {
@@ -106,8 +123,12 @@ function renderReviewsTable() {
         
         let dateStr = 'Нет даты';
         if (review.date) {
-            const date = review.date.toDate ? review.date.toDate() : new Date(review.date);
-            dateStr = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
+            try {
+                const date = review.date.toDate ? review.date.toDate() : new Date(review.date);
+                dateStr = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
+            } catch (error) {
+                console.error('Ошибка форматирования даты:', error);
+            }
         }
         
         let stars = '';
@@ -470,14 +491,32 @@ function toggleView(view) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM загружен, инициализация админ-панели');
+    
     const loginForm = document.getElementById('login-form');
     const adminPanel = document.getElementById('admin-panel');
     const productFormModal = document.getElementById('product-form-modal');
     const logoutButton = document.getElementById('logout-button');
     
+    if (!loginForm || !adminPanel) {
+        console.error('Основные элементы страницы не найдены');
+        return;
+    }
+    
     logoutButton.style.display = 'none';
     
+    // Проверяем, что Firebase инициализирован
+    if (typeof firebase === 'undefined' || !firebase.apps.length) {
+        console.error('Firebase не инициализирован');
+        showNotification('Ошибка: Firebase не инициализирован', 'error');
+        return;
+    }
+    
+    console.log('Firebase инициализирован');
+    
     firebase.auth().onAuthStateChanged((user) => {
+        console.log('Статус аутентификации изменился:', user ? 'авторизован' : 'не авторизован');
+        
         if (user) {
             loginForm.style.display = 'none';
             adminPanel.style.display = 'block';
@@ -494,7 +533,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
+    // Инициализация обработчиков вкладок
+    console.log('Инициализация обработчиков вкладок');
+    
     document.getElementById('products-tab-btn').addEventListener('click', function() {
+        console.log('Переключение на вкладку товаров');
         document.getElementById('products-tab-btn').classList.add('active');
         document.getElementById('reviews-tab-btn').classList.remove('active');
         document.getElementById('products-tab').classList.add('active');
@@ -502,6 +545,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     document.getElementById('reviews-tab-btn').addEventListener('click', function() {
+        console.log('Переключение на вкладку отзывов');
         document.getElementById('reviews-tab-btn').classList.add('active');
         document.getElementById('products-tab-btn').classList.remove('active');
         document.getElementById('reviews-tab').classList.add('active');
@@ -509,6 +553,7 @@ document.addEventListener('DOMContentLoaded', function() {
         loadReviews();
     });
     
+    // Остальные обработчики
     document.getElementById('login-button').addEventListener('click', function() {
         const email = document.getElementById('email-input').value;
         const password = document.getElementById('password-input').value;
