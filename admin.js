@@ -253,8 +253,13 @@ async function updateProductStock(productId, newStock) {
     if (!product) return false;
 
     const stockCell = document.querySelector(`.stock-cell[data-id="${productId}"]`);
+    const cardStock = document.querySelector(`.card-stock[data-id="${productId}"]`);
+    
     if (stockCell) {
         stockCell.classList.add('syncing');
+    }
+    if (cardStock) {
+        cardStock.classList.add('syncing');
     }
 
     syncingProducts.add(productId);
@@ -271,6 +276,11 @@ async function updateProductStock(productId, newStock) {
             stockCell.querySelector('.stock-value').textContent = newStock;
             stockCell.classList.remove('syncing');
         }
+        
+        if (cardStock) {
+            cardStock.querySelector('.stock-value').textContent = newStock;
+            cardStock.classList.remove('syncing');
+        }
 
         syncingProducts.delete(productId);
         updateSyncingStatus();
@@ -280,6 +290,10 @@ async function updateProductStock(productId, newStock) {
 
         if (stockCell) {
             stockCell.classList.remove('syncing');
+        }
+        
+        if (cardStock) {
+            cardStock.classList.remove('syncing');
         }
 
         syncingProducts.delete(productId);
