@@ -430,7 +430,8 @@ function getCategoryName(categoryCode) {
     const categories = {
         'pods': 'Поды',
         'disposable': 'Одноразки',
-        'liquid': 'Жидкости'
+        'liquid': 'Жидкости',
+        'other': 'Другое'
     };
 
     return categories[categoryCode] || categoryCode;
