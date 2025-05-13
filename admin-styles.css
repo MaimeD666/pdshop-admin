@@ -63,12 +63,12 @@ button:active {
 .primary-button {
     background-color: var(--primary-color);
     color: white;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .primary-button:hover {
     background-color: var(--primary-dark);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .secondary-button {
@@ -175,14 +175,14 @@ button:active {
 .product-card {
     background-color: white;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .product-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
 }
 
 .card-header {
@@ -262,7 +262,7 @@ button:active {
     padding: 50px 20px;
     background-color: white;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .empty-product-card i {
@@ -271,7 +271,6 @@ button:active {
     margin-bottom: 15px;
 }
 
-/* Состояние синхронизации */
 .sync-status {
     position: fixed;
     bottom: 20px;
@@ -280,7 +279,7 @@ button:active {
     color: white;
     padding: 10px 16px;
     border-radius: 30px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     display: flex;
     align-items: center;
     gap: 8px;
@@ -307,11 +306,15 @@ button:active {
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
-/* Таблица товаров */
 .table-responsive {
     overflow-x: auto;
     width: 100%;
@@ -327,7 +330,8 @@ thead {
     color: white;
 }
 
-th, td {
+th,
+td {
     padding: 12px 15px;
     text-align: left;
     border-bottom: 1px solid #ddd;
@@ -347,7 +351,6 @@ tbody tr:hover {
     background-color: rgba(122, 150, 144, 0.1);
 }
 
-/* Ячейки для изменения количества */
 .stock-cell {
     display: flex;
     align-items: center;
@@ -387,7 +390,6 @@ tbody tr:hover {
     transform: scale(0.95);
 }
 
-/* Статус синхронизации в ячейке */
 .stock-cell.syncing .stock-value {
     position: relative;
 }
@@ -414,7 +416,7 @@ tbody tr:hover {
     height: 50px;
     object-fit: cover;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .actions-cell {
@@ -423,7 +425,8 @@ tbody tr:hover {
     flex-wrap: nowrap;
 }
 
-.edit-button, .delete-button {
+.edit-button,
+.delete-button {
     padding: 6px 10px;
     font-size: 12px;
     border-radius: 6px;
@@ -439,7 +442,6 @@ tbody tr:hover {
     color: white;
 }
 
-/* Modal Styles */
 .modal {
     display: none;
     position: fixed;
@@ -462,7 +464,7 @@ tbody tr:hover {
     padding: 20px;
     max-height: 80vh;
     overflow-y: auto;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     animation: slideUp 0.3s ease;
 }
 
@@ -529,7 +531,7 @@ tbody tr:hover {
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .image-preview img {
@@ -544,81 +546,86 @@ tbody tr:hover {
     margin-top: 20px;
 }
 
-/* Анимации */
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes slideUp {
-    from { 
+    from {
         opacity: 0;
         transform: translateY(30px);
     }
-    to { 
+
+    to {
         opacity: 1;
         transform: translateY(0);
     }
 }
 
-/* Медиа-запросы для адаптивности */
 @media (max-width: 768px) {
     h1 {
         font-size: 1.2rem;
     }
-    
+
     .admin-actions {
         justify-content: center;
     }
-    
+
     .modal-content {
         margin: 10px auto;
         width: 95%;
         padding: 15px;
     }
-    
-    th, td {
+
+    th,
+    td {
         padding: 8px 10px;
         font-size: 14px;
     }
-    
+
     .actions-cell {
         flex-direction: column;
         gap: 5px;
     }
-    
-    .edit-button, .delete-button {
+
+    .edit-button,
+    .delete-button {
         width: 100%;
     }
-    
+
     .stock-cell {
         flex-direction: column;
         align-items: flex-start;
     }
-    
+
     .card-header {
         flex-direction: column;
         align-items: center;
         text-align: center;
     }
-    
+
     .card-header img {
         width: 70px;
         height: 70px;
     }
-    
+
     .card-details {
         flex-direction: column;
         gap: 15px;
     }
-    
+
     .card-stock {
         width: 100%;
         justify-content: center;
     }
 }
 
-/* Дополнительные стили для кнопок */
 .icon-btn {
     width: 40px;
     height: 40px;
@@ -627,7 +634,7 @@ tbody tr:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .notification {
@@ -638,7 +645,7 @@ tbody tr:hover {
     color: white;
     padding: 15px 20px;
     border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     z-index: 1100;
     opacity: 0;
     transform: translateY(-20px);
@@ -661,6 +668,7 @@ tbody tr:hover {
     opacity: 1;
     transform: translateY(0);
 }
+
 .github-settings {
     background-color: var(--primary-color);
     color: white;
@@ -722,4 +730,121 @@ tbody tr:hover {
     background-color: var(--primary-color);
     width: 0;
     transition: width 0.3s ease;
+}
+
+.admin-tabs {
+    margin-bottom: 20px;
+}
+
+.admin-tabs .view-toggle {
+    background-color: #f0f0f0;
+    padding: 5px;
+    border-radius: 10px;
+    display: inline-flex;
+    margin-bottom: 20px;
+}
+
+.admin-tabs .view-toggle button {
+    flex: 1;
+    padding: 10px 15px;
+    border: none;
+    background: none;
+    border-radius: 8px;
+    margin: 0 5px;
+    transition: all 0.3s ease;
+}
+
+.admin-tabs .view-toggle button.active {
+    background-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.tab-content {
+    display: none;
+    animation: fadeIn 0.5s ease;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.reviews-table-container {
+    background-color: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.review-text-cell {
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@media (max-width: 768px) {
+    .review-text-cell {
+        max-width: 150px;
+    }
+
+    .admin-tabs .view-toggle {
+        width: 100%;
+    }
+}
+
+.confirmation-modal .modal-content {
+    max-width: 450px;
+    padding: 0;
+    overflow: hidden;
+}
+
+.confirmation-modal .modal-header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 16px 16px 0 0;
+}
+
+.confirmation-modal .modal-header h3 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+}
+
+.confirmation-modal .modal-body {
+    padding: 20px;
+}
+
+.confirmation-modal .modal-footer {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    background-color: #f5f5f5;
+    border-top: 1px solid #e0e0e0;
+}
+
+.confirmation-modal .delete-confirm-button {
+    background-color: var(--error-color);
+    color: white;
+}
+
+@media (max-width: 480px) {
+    .confirmation-modal .modal-content {
+        width: 90%;
+        margin: 50% auto 0;
+        transform: translateY(-50%);
+    }
+
+    .confirmation-modal .modal-footer {
+        flex-direction: column;
+    }
+
+    .confirmation-modal button {
+        width: 100%;
+    }
 }

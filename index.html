@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Админ-панель - Par Dar Shop</title>
     <meta charset="UTF-8">
@@ -11,87 +12,93 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="firebase-config.js"></script>
 </head>
+
 <body>
     <div class="container">
         <header>
             <h1><i class="fas fa-store"></i> Админ-панель Par Dar Shop</h1>
             <button id="logout-button"><i class="fas fa-sign-out-alt"></i> Выйти</button>
         </header>
-        
+
         <div id="login-form" class="login-form">
             <h2><i class="fas fa-lock"></i> Вход в админ-панель</h2>
             <input type="email" id="email-input" placeholder="Email" required>
             <input type="password" id="password-input" placeholder="Пароль" required>
             <button id="login-button"><i class="fas fa-sign-in-alt"></i> Войти</button>
         </div>
-        
+
         <div id="admin-panel" class="admin-panel" style="display: none;">
             <div class="admin-actions">
-                <button id="add-product-button" class="primary-button"><i class="fas fa-plus"></i> Добавить товар</button>
-                <button id="export-products-button" class="secondary-button"><i class="fas fa-file-export"></i> Экспорт</button>
-                <button id="import-products-button" class="secondary-button"><i class="fas fa-file-import"></i> Импорт</button>
+                <button id="add-product-button" class="primary-button"><i class="fas fa-plus"></i> Добавить
+                    товар</button>
+                <button id="export-products-button" class="secondary-button"><i class="fas fa-file-export"></i>
+                    Экспорт</button>
+                <button id="import-products-button" class="secondary-button"><i class="fas fa-file-import"></i>
+                    Импорт</button>
             </div>
-            
-            <div class="view-toggle">
-                <button id="products-tab-btn" class="active"><i class="fas fa-box"></i> Товары</button>
-                <button id="reviews-tab-btn"><i class="fas fa-comments"></i> Отзывы</button>
-            </div>
-            
-            <div id="content-tabs">
-                <div id="products-tab" class="tab-content active">
-                    <div class="view-toggle">
-                        <button id="table-view-btn" class="active"><i class="fas fa-table"></i> Таблица</button>
-                        <button id="cards-view-btn"><i class="fas fa-th"></i> Карточки</button>
+
+            <div class="admin-tabs">
+                <div class="view-toggle">
+                    <button id="products-tab-btn" class="active"><i class="fas fa-box"></i> Товары</button>
+                    <button id="reviews-tab-btn"><i class="fas fa-comments"></i> Отзывы</button>
+                </div>
+
+                <div id="content-tabs">
+                    <div id="products-tab" class="tab-content active">
+                        <div class="view-toggle">
+                            <button id="table-view-btn" class="active"><i class="fas fa-table"></i> Таблица</button>
+                            <button id="cards-view-btn"><i class="fas fa-th"></i> Карточки</button>
+                        </div>
+
+                        <div id="table-view">
+                            <div class="products-table-container">
+                                <div class="table-responsive">
+                                    <table id="products-table">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Изображение</th>
+                                                <th>Название</th>
+                                                <th>Цена</th>
+                                                <th>Категория</th>
+                                                <th>Наличие</th>
+                                                <th>Действия</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="products-list"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="cards-view">
+                            <div id="products-cards" class="product-cards"></div>
+                        </div>
                     </div>
-                    
-                    <div id="table-view">
-                        <div class="products-table-container">
+
+                    <div id="reviews-tab" class="tab-content">
+                        <div class="reviews-table-container">
                             <div class="table-responsive">
-                                <table id="products-table">
+                                <table id="reviews-table">
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th>Изображение</th>
-                                            <th>Название</th>
-                                            <th>Цена</th>
-                                            <th>Категория</th>
-                                            <th>Наличие</th>
+                                            <th>Пользователь</th>
+                                            <th>Дата</th>
+                                            <th>Оценка</th>
+                                            <th>Текст отзыва</th>
                                             <th>Действия</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="products-list"></tbody>
+                                    <tbody id="reviews-list"></tbody>
                                 </table>
                             </div>
-                        </div>
-                    </div>
-                    
-                    <div id="cards-view">
-                        <div id="products-cards" class="product-cards"></div>
-                    </div>
-                </div>
-                
-                <div id="reviews-tab" class="tab-content">
-                    <div class="reviews-table-container">
-                        <div class="table-responsive">
-                            <table id="reviews-table">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Пользователь</th>
-                                        <th>Дата</th>
-                                        <th>Оценка</th>
-                                        <th>Текст отзыва</th>
-                                        <th>Действия</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="reviews-list"></tbody>
-                            </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        
+
         <div id="product-form-modal" class="modal">
             <div class="modal-content">
                 <div class="modal-header">
@@ -100,17 +107,17 @@
                 </div>
                 <form id="product-form">
                     <input type="hidden" id="product-id">
-                    
+
                     <div class="form-group">
                         <label for="product-title">Название товара</label>
                         <input type="text" id="product-title" required>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="product-price">Цена (₽)</label>
                         <input type="number" id="product-price" required min="0">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="product-category">Категория</label>
                         <select id="product-category" required>
@@ -119,41 +126,43 @@
                             <option value="liquid">Жидкости</option>
                         </select>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="product-stock">Наличие (шт)</label>
                         <input type="number" id="product-stock" required min="0">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="product-image-upload">Предпросмотр изображения</label>
                         <input type="file" id="product-image-upload" accept="image/*">
                         <div class="image-preview" id="image-preview"></div>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="product-image-path">Путь к изображению</label>
                         <input type="text" id="product-image-path" value="images/placeholder.png" required>
                         <small>*Укажите путь к изображению, которое загрузите в GitHub</small>
                     </div>
-                    
+
                     <div class="form-buttons">
-                        <button type="button" class="secondary-button close-form-button"><i class="fas fa-times"></i> Отмена</button>
+                        <button type="button" class="secondary-button close-form-button"><i class="fas fa-times"></i>
+                            Отмена</button>
                         <button type="submit" class="primary-button"><i class="fas fa-save"></i> Сохранить</button>
                     </div>
                 </form>
             </div>
         </div>
-        
+
         <div id="sync-status" class="sync-status">
             <span class="sync-icon"></span>
             <span id="sync-message">Синхронизация...</span>
         </div>
-        
+
         <div id="notification" class="notification"></div>
     </div>
-    
+
     <script src="admin.js"></script>
     <script src="github-uploader.js"></script>
 </body>
+
 </html>
